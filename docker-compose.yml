@@ -1,0 +1,34 @@
+version: '2'
+#TODO: 3?
+
+volumes:
+  # for persistence between restarts
+  postgres_data: {}
+  env: {}
+
+services:
+  app:
+    build: ./compose/app_dev
+    volumes:
+      - ./src:/srv/app
+      - env:/srv/env
+    working_dir: /srv/app
+    env_file:
+      - env_dev
+    ports:
+      - "127.0.0.1:5000:5000"
+    depends_on:
+      - db
+    # uncomment for debugging
+    # with docker-compose exec app bash
+    #entrypoint: ["sh", "-c", "sleep infinity"]
+  db:
+    #https://hub.docker.com/_/postgres/
+    image: postgres:9.6.3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+    ports: #make db accessible locally
+      - "127.0.0.1:5432:5432"
