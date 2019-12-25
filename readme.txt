@@ -1,22 +1,16 @@
-Development Setup
+Db'yi create etmek icin, cli'dan "flask resetdb" komutunu calistirabilirsiniz
+
+projede flask kullandim, flask kullanmamin amaci diger frameworklere gore (django v.s) daha lightweight ve atomic olmasindandir
+Database olarak postgres, orm olarak SQLAlchmey kullandim
+Bir Api beklenildigi icin, login islemlerinde session yerine JWT ile bir tokenize yapisi kurdum.
+
+Projenin Customer kisimlari, Orm ve JWT tarafi biraz vaktigimi aldigi icin yetistiremeidim fakat jwt kullanimina ornek olmasi icin
+Customer Create functionunda bir @jwt_required decorator'u ekledim.
+
+Projeyi dockerize ettim, compose file icerisinde, docker islemleri ve postgres birlikte up oluyorlar.
+
+
+Proje docker ortamında asagidaki sekilde ayaga kaldirilabilir
 
 $ docker-compose build
 $ docker-compose up
-
-Run Flask Admin Commands
-# go into the docker container and enter the virtualenv
-$ make go_into_app
-$ source /srv/maintenance.sh
-
-# do stuff
-$ flask resetdb
-
-Add New Dependencies
-# go into the docker container and enter the virtualenv
-$ make go_into_app
-$ source /srv/maintenance.sh
-
-# install new pip modules in the venv here
-
-# save them
-$ pip freeze --local > requirements.txt
