@@ -15,7 +15,7 @@ app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 jwt = JWTManager(app)
 
 
-# SQL Alchemyaoo
+# SQL Alchemy
 DB_URL = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(
     user="postgres", pw="mysecretpassword", url="192.168.99.100:5432", db="firefly")
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
@@ -56,8 +56,7 @@ class CustomerAddress(db.Model):
         'customers.id'), nullable=False)
     address = db.Column(db.String(128))
 
-
-# def create_user
+#reset db
 @app.cli.command('resetdb')
 def resetdb_command():
     """Destroys and creates the database + tables."""
