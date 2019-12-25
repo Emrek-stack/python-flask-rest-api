@@ -15,7 +15,7 @@ jsonschema==3.2.0
 jwt==0.6.1
 MarkupSafe==1.1.1
 passlib==1.7.2
-psycopg2==2.8.4
+psycopg2==2.7
 pycodestyle==2.5.0
 pycparser==2.19
 PyJWT==1.7.1

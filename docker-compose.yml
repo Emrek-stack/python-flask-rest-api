@@ -8,9 +8,9 @@ volumes:
 
 services:
   app:
-    build: ./compose/app_dev
+    build: .
     volumes:
-      - ./src:/srv/app
+      - ./:/srv/app
       - env:/srv/env
     working_dir: /srv/app
     env_file:
