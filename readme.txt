@@ -9,6 +9,7 @@ Customer Create functionunda bir @jwt_required decorator'u ekledim.
 
 Projeyi dockerize ettim, compose file icerisinde, docker islemleri ve postgres birlikte up oluyorlar.
 
+Postman collection'u projenin root folderda gorebilirsiniz, ayrica api icerisinde bir swagger destegi var.
 
 Proje docker ortamında asagidaki sekilde ayaga kaldirilabilir
 
