@@ -1,12 +1,19 @@
 import os
 import datetime
-from flask import Flask, request
-from flask_restplus import Resource, Api
+import json
+from flask import Flask, request, make_response, jsonify
+from flask_restplus import Resource, Api, fields, marshal_with, marshal
 from flask_sqlalchemy import SQLAlchemy
-#from api.account import HelloWorld
+from passlib.apps import custom_app_context as pwd_context
+from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt, JWTManager)
 
 app = Flask(__name__)
 api = Api(app)
+
+#jwt settings
+app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+jwt = JWTManager(app)
+
 
 # SQL Alchemyaoo
 DB_URL = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(
@@ -16,12 +23,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # entities
-
-
 class User(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(32), index=True)
+    email = db.Column(db.String(50), index=True)
     password_hash = db.Column(db.String(128))
     created_date = db.Column(db.DateTime, nullable=False,
                              default=datetime.datetime.utcnow)
@@ -34,25 +40,25 @@ class User(db.Model):
 
 
 class Customer(db.Model):
-    __tablename__ = 'customer'
+    __tablename__ = 'customers'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(32), index=True)
     addresses = db.relationship(
-        'customer_address', backref='customer', lazy=True)
+        "CustomerAddress", uselist=False, backref=db.backref('customers'))
     created_date = db.Column(db.DateTime, nullable=False,
                              default=datetime.datetime.utcnow)
 
 
 class CustomerAddress(db.Model):
-    __tablename__ = 'customer_address'
+    __tablename__ = 'customer_addresses'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     customer_id = db.Column(db.Integer, db.ForeignKey(
-        'customer.id'), nullable=False)
+        'customers.id'), nullable=False)
     address = db.Column(db.String(128))
 
 
 # def create_user
-# @app.cli.command('resetdb')
+@app.cli.command('resetdb')
 def resetdb_command():
     """Destroys and creates the database + tables."""
 
@@ -71,28 +77,51 @@ def resetdb_command():
 
 
 # api
-# user methods
-@api.route('/api/users')
-class User(Resource):
+# login methods
+@api.route('/api/users/login')
+@api.doc(params={'username': 'string'})
+@api.doc(params={'password': 'string'})
+class Login(Resource):
     def post(self):
-        username = request.json.get('username')
-        password = request.json.get('password')
-        return {username : username}
-        # if username is None or password is None:
-        #     abort(400)  # missing arguments
-        # if User.query.filter_by(username=username).first() is not None:
-        #     abort(400)  # existing user
-        # user = User(username=username)
-        # user.hash_password(password)
-        # db.session.add(user)
-        # db.session.commit()
-        #return jsonify({'username': username}), 201, {'Location': url_for('get_user', id=username, _external=True)}
+        username, password = request.json.get(
+            'username').strip(), request.json.get('password').strip()
+        current_user = User.query.filter_by(username=username).first()
+        if not current_user:
+            return {'success': False, 'message': 'User {} doesn\'t exist'.format(username)}
+
+        if current_user.verify_password(password):
+            refresh_token = create_refresh_token(identity = username)
+            access_token = create_access_token(identity =username)
+            return {'access_token': str(access_token), 'refresh_token': str(refresh_token)}
+        else:
+            return {'success': False, 'message': 'Username or Password is wrong!'}
 
 
-@api.route("/api/customer")
-class Customer(Resource):
+# register methods
+@api.route('/api/users/register')
+@api.doc(params={'username': 'username'})
+@api.doc(params={'password': 'password'})
+@api.doc(params={'email': 'email'})
+class Register(Resource):
+    def post(self):
+        username, password, email = request.json.get('username').strip(
+        ), request.json.get('password').strip(), request.json.get('email').strip()
+        current_user = User.query.filter_by(username=username).first()
+        if not current_user:
+            new_user = User(username=username, email=email)
+            new_user.password = new_user.hash_password(password)
+            db.session.add(new_user)
+            db.session.commit()
+            return {"status": True, "message": "user created"}
+        return {"status": False, "message": 'User {} exist'.format(username)}
+
+
+@api.route("/api/customer/create")
+class CreateCustomer(Resource):
+    @jwt_required
     def post(self):
         pass
+
 
 if __name__ == '__main__':
     app.run(debug=True)
