@@ -15,4 +15,4 @@ RUN pip3 install -r src/requirements.txt
 ADD start.sh ./start.sh
 RUN chmod +x ./start.sh
 
-#ENTRYPOINT ["/bin/bash", "/srv/app/start.sh"]
+ENTRYPOINT ["/bin/bash", "/srv/app/start.sh"]
