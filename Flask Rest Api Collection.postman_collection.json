@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\" : \"emre\",\n\t\"password\" : \"emre\"\n}",
+							"raw": "{\n\t\"username\" : \"emre\",\n\t\"password\" : \"password\",\n\t\"email\" \"emre.karahan@gmail.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -30,7 +30,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/users",
+							"raw": "http://127.0.0.1:5000/api/users/register",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -41,7 +41,8 @@
 							"port": "5000",
 							"path": [
 								"api",
-								"users"
+								"users",
+								"register"
 							]
 						}
 					},
@@ -50,10 +51,23 @@
 				{
 					"name": "Login",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://127.0.0.1:5000/api/users/login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
 						}
 					},
 					"response": []
@@ -63,7 +77,48 @@
 		},
 		{
 			"name": "Customer",
-			"item": [],
+			"item": [
+				{
+					"name": "Create Customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzcyMzQxMTEsIm5iZiI6MTU3NzIzNDExMSwianRpIjoiMjkwYWQ0OWMtZTViYy00OWJhLWI2ZTAtNmY3NWFkNzlmODYwIiwiZXhwIjoxNTc3MjM1MDExLCJpZGVudGl0eSI6ImVtcmUiLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.aT-x-s0p_bh8rLmBlujSpQEMa8uaDo_sMJxWcJ7Zp2w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzcyMzQxMTEsIm5iZiI6MTU3NzIzNDExMSwianRpIjoiMjkwYWQ0OWMtZTViYy00OWJhLWI2ZTAtNmY3NWFkNzlmODYwIiwiZXhwIjoxNTc3MjM1MDExLCJpZGVudGl0eSI6ImVtcmUiLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.aT-x-s0p_bh8rLmBlujSpQEMa8uaDo_sMJxWcJ7Zp2w",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/customer",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				}
+			],
 			"protocolProfileBehavior": {}
 		}
 	],
