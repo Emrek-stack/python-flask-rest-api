@@ -18,7 +18,7 @@ passlib==1.7.2
 psycopg2==2.7
 pycodestyle==2.5.0
 pycparser==2.19
-PyJWT==1.7.1
+PyJWT==2.4.0
 pyrsistent==0.15.6
 pytz==2019.3
 six==1.13.0
